@@ -8,7 +8,7 @@ const ModifyJobs = () => {
   const [editJob, setEditJob] = useState(null); // store job being edited
   const [updatedStatus, setUpdatedStatus] = useState("");
 
-  // ✅ Fetch all jobs
+  // Fetch all jobs
   const fetchJobs = async () => {
     try {
       const res = await fetch("http://localhost:5000/techs");
@@ -27,7 +27,7 @@ const ModifyJobs = () => {
     fetchJobs();
   }, []);
 
-  // ✅ Update job status
+  // Update job status
   const handleUpdate = async (jobNo) => {
   try {
     const res = await fetch(`http://localhost:5000/techs/${jobNo}/status`, {
@@ -47,11 +47,11 @@ const ModifyJobs = () => {
 };
 
 
-  // ✅ Delete a job
+  //Delete a job
  const handleDelete = async (jobNo) => {
   if (!window.confirm("Are you sure you want to delete this job?")) return;
   try {
-    const res = await fetch(`http://localhost:5000/techs/${jobNo}`, {
+    const res = await fetch(`http://localhost:5000/techs/by-jobno/${jobNo}`, {
       method: "DELETE",
     });
     const data = await res.json();

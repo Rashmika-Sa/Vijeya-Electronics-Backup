@@ -208,7 +208,7 @@ exports.updateJobById = async (req, res) => {
 };
 
 
-//Delete job by ID (used in CheckStatus.js frontend)
+//Delete by MongoDB _id — used by customers
 exports.deleteJobById = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -229,7 +229,6 @@ exports.deleteJobById = async (req, res) => {
       );
     }
 
-    //Create notification for admin
     await Notification.create({
       type: "Delete",
       message: `Customer ${job.Name} deleted their repair job.`,
@@ -251,48 +250,51 @@ exports.deleteJobById = async (req, res) => {
   }
 };
 
-
-//Delete job by Job_No (for admin routes)
-exports.deleteJob = async (req, res) => {
-  const { jobNo } = req.params;
+//Delete by Job_No — used by admin dashboard
+exports.deleteJobByJobNo = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const job = await TechModel.findOne({ Job_No: jobNo }).session(session);
+    const job = await TechModel.findOne({ Job_No: req.params.jobNo }).session(session);
     if (!job) {
       await session.abortTransaction();
       return res.status(404).json({ message: "Job not found" });
     }
 
     const activeStatuses = ["Pending", "In Progress"];
-
     if (job.technicianId && activeStatuses.includes(job.status)) {
       await Technician.updateOne(
         { _id: job.technicianId },
         { $inc: { currentActiveJobs: -1 } },
         { session }
       );
+      console.log(`🔻 Technician ${job.technicianId} active job count decremented`);
     }
 
-    await TechModel.deleteOne({ _id: job._id }).session(session);
+    await Notification.create({
+      type: "Delete",
+      message: `Admin deleted job #${job.Job_No} (${job.Name}).`,
+      customerName: job.Name,
+      jobNo: job.Job_No,
+    });
+
+    await TechModel.deleteOne({ Job_No: job.Job_No }).session(session);
 
     await session.commitTransaction();
     session.endSession();
 
     res.status(200).json({
-      message: "🗑️ Job deleted successfully and technician job count updated.",
+      message: `🗑️ Job #${job.Job_No} deleted successfully.`,
     });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
     console.error("Error deleting job:", error);
-    res.status(500).json({
-      message: "❌ Server error while deleting job",
-      error,
-    });
+    res.status(500).json({ message: "❌ Error deleting job", error });
   }
 };
+
 
 //Generate and download JobCard PDF
 exports.generateJobPDF = async (req, res) => {

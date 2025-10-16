@@ -80,7 +80,7 @@ function CheckStatus() {
     if (!result?._id) return alert("Job ID not found.");
     if (!window.confirm("Are you sure you want to delete this job?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/techs/${result._id}`, {
+      const res = await fetch(`http://localhost:5000/techs/by-id/${result._id}`, {
         method: "DELETE",
       });
       if (res.ok) {

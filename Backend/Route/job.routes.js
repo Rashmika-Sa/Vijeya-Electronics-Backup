@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require("express"); 
 const {
   createJob,
   updateJobStatus,
@@ -6,22 +6,22 @@ const {
   getJobByJobNo,
   searchJob,
   updateJobById,
-  deleteJobById,
-  deleteJob,
-} = require("../Controllers/job.controller");
+  deleteJobById,        
+  deleteJobByJobNo,    
+  generateJobPDF,
+} = require("../controllers/job.controller");
 
 const router = express.Router();
-const jobController = require("../Controllers/job.controller");
 
-router.put("/:jobNo/status", updateJobStatus);
 router.post("/", createJob);
 router.get("/", getAllJobs);
 router.get("/status", searchJob);
+router.put("/:jobNo/status", updateJobStatus);
 router.put("/:id", updateJobById);
-router.delete("/:id", deleteJobById);
-router.get("/:jobNo", getJobByJobNo);
-router.delete("/:jobNo", deleteJob);
-router.get("/:jobNo/pdf", jobController.generateJobPDF);
+router.delete("/by-id/:id", deleteJobById);         
+router.delete("/by-jobno/:jobNo", deleteJobByJobNo); 
 
+router.get("/:jobNo", getJobByJobNo);
+router.get("/:jobNo/pdf", generateJobPDF);
 
 module.exports = router;

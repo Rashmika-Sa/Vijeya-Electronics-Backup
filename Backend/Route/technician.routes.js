@@ -5,7 +5,7 @@ const {
   getAllTechnicians,
   updateTechnician,
   deleteTechnician,
-} = require("../Controllers/technician.controller");
+} = require("../controllers/technician.controller");
 
 const router = express.Router();
 

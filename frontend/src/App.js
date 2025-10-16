@@ -1,15 +1,15 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 
-import Landing from "./Components/LandPage/Landing";
-import CheckStatus from "./Components/Status/CheckStatus";
-import JobF from "./Components/JobF/JobForm";
-import AddTechnician from "./Components/AddTechnicians/AddTechnician";
-import AdminDashboard from "./Components/Admin/AdminDashboard";
-import AllJobs from "./Components/Admin/AllJobs";
-import ModifyJobs from "./Components/Admin/ModifyJobs";
-import NotificationPanel from "./Components/Admin/NotificationPanel";
-import RoleSwitcher from "./Components/utils/RoleSwitcher"; 
+import Landing from "./components/LandPage/Landing";
+import CheckStatus from "./components/Status/CheckStatus";
+import JobF from "./components/JobF/JobForm";
+import AddTechnician from "./components/AddTechnicians/AddTechnician";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import AllJobs from "./components/admin/AllJobs";
+import ModifyJobs from "./components/admin/ModifyJobs";
+import NotificationPanel from "./components/admin/NotificationPanel";
+import RoleSwitcher from "./components/utils/RoleSwitcher"; 
 
 //Role protection wrapper
 function ProtectedRoute({ children, allowedRoles }) {
